@@ -75,6 +75,7 @@ const initDb = () => {
             `
 
             document.getElementById('messages').appendChild(li)
+            main.scrollTop = main.scrollHeight // scroll to 
         })
     })
 
@@ -83,20 +84,22 @@ const initDb = () => {
     const newMessage = async e => {
         e.preventDefault() // don't reload page on submit
 
-        try {
-            // Add to database
-            await addDoc(collection(db, "messages"), {
-                userId: userData.uid,
-                userName: userData.email.split('@')[0],
-                timestamp: Timestamp.fromDate(new Date()),
-                message: document.getElementById('input').value
-            })
+        if (!document.getElementById('input').value)
 
-            // clear input
-            document.getElementById('input').value = ''
-        } catch (error) {
-            console.log(error)
-        }
+            try {
+                // Add to database
+                await addDoc(collection(db, "messages"), {
+                    userId: userData.uid,
+                    userName: userData.email.split('@')[0],
+                    timestamp: Timestamp.fromDate(new Date()),
+                    message: document.getElementById('input').value
+                })
+
+                // clear input
+                document.getElementById('input').value = ''
+            } catch (error) {
+                console.log(error)
+            }
     }
 
     document.getElementById('new-message').addEventListener('submit', newMessage)
